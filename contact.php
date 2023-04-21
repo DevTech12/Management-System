@@ -11,40 +11,8 @@
     <title>Forum Website</title>
   </head>
   <body>
-     <!-- connection to the database -->
-     <?php include 'partial/_dbconnect.php'; ?> 
-     
+  <?php include 'partial/_dbconnect.php'; ?>
     <?php include 'partial/_header.php'; ?> 
-   
-    <!-- fecth the categories -->
-    <div class="container my-3">
-       <h2 class="text-center">Welcome Sinhagad Academy Of Engineering </h2>
-       <div class="row">
-    <?php 
-    $sql = "SELECT * FROM `category`";
-    $result = mysqli_query($conn, $sql);
-    while ($row = mysqli_fetch_assoc($result)){
-      //  echo $row['category_sno'];
-      $id = $row['category_sno'];
-      $cat = $row['category_name'];
-      $desc = $row['category_description'];
-      echo '<div class="col-md-4 my-2">
-      <div class="card" style="width: 18rem;">
-       <img src="imgs/card-'.$id .'.png" height="250px" class="card-img-top" alt="..." width="286">
-        <div class="card-body">
-          <h5 class="card-title"><a href="threadlist.php?catid='. $id .'">'. $cat .'</a></h5>
-          <p class="card-text">'. substr($desc, 0, 90) .'...</p>
-          <a href="threadlist.php?catid='. $id .'" class="btn btn-primary">Explore</a>
-        </div>
-      </div>
-     </div> ';
-
-        }
-        ?> 
-       </div>
-     </div>
-
-   
 
 
     <?php include 'partial/_footer.php'; ?> 

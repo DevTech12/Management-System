@@ -7,45 +7,60 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <style>
+        #main {
+            min-height: 100vh;
+        }
+    </style>
 
     <title>Forum Website</title>
   </head>
   <body>
      <!-- connection to the database -->
      <?php include 'partial/_dbconnect.php'; ?> 
-     
-    <?php include 'partial/_header.php'; ?> 
-   
-    <!-- fecth the categories -->
-    <div class="container my-3">
-       <h2 class="text-center">Welcome Sinhagad Academy Of Engineering </h2>
-       <div class="row">
-    <?php 
-    $sql = "SELECT * FROM `category`";
-    $result = mysqli_query($conn, $sql);
-    while ($row = mysqli_fetch_assoc($result)){
-      //  echo $row['category_sno'];
-      $id = $row['category_sno'];
-      $cat = $row['category_name'];
-      $desc = $row['category_description'];
-      echo '<div class="col-md-4 my-2">
-      <div class="card" style="width: 18rem;">
-       <img src="imgs/card-'.$id .'.png" height="250px" class="card-img-top" alt="..." width="286">
-        <div class="card-body">
-          <h5 class="card-title"><a href="threadlist.php?catid='. $id .'">'. $cat .'</a></h5>
-          <p class="card-text">'. substr($desc, 0, 90) .'...</p>
-          <a href="threadlist.php?catid='. $id .'" class="btn btn-primary">Explore</a>
-        </div>
-      </div>
-     </div> ';
+    <?php include 'partial/_header.php'; ?>
+    
+    
+    <!-- search result start here -->
+    <div class="container my-4" id="main">
+        <h1>Search result for <em>"<?php echo $_GET['search'] ?>"</em></h1>
 
+        <?php 
+        $noResult = true;
+        $query = $_GET["search"];
+        $sql = "SELECT * FROM `threads` WHERE MATCH (thread_title, thread_description) against ('$query')";
+        $result = mysqli_query($conn, $sql);
+        while ($row = mysqli_fetch_assoc($result)){
+        $id = $row['thread_id'];
+        $name = $row['thread_title'];
+        $desc = $row['thread_description'];
+        $noResult = false;
+        
+        echo '<div class="result">
+                 <h3><a href="thread.php?threadid='. $id .'" class="text-dark">
+                    '. $name .'</a></h3>
+                    <p>'. $desc .'</p>
+             </div>';
         }
-        ?> 
-       </div>
-     </div>
+        if ($noResult){
+         echo '<div class="jumbotron jumbotron-fluid">
+         <div class="container">
+            <h1 class="display-4">No Results Found</h1>
+            <p class="lead">
+                 Suggestions:<ul>
+                  <li> Make sure that all words are spelled correctly.</li>
+                  <li> Try different keywords.</li>
+                  <li> Try more general keywords.</li>
+                  <li> Try fewer keywords.</li>
+            </ul><p>
+         </div>
+    </div>';
+        }
+        ?>
 
+        
+    </div>
    
-
 
     <?php include 'partial/_footer.php'; ?> 
     <!-- Optional JavaScript; choose one of the two! -->
