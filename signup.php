@@ -1,3 +1,26 @@
+<?php
+$showAlert = false;
+if ($_SERVER["REQUEST_METHOD"] == "POST"){
+    include 'comp/_dbconnect.php';
+    $name = $_POST["uname"];
+    $mobno = $_POST["mobno"];
+    $dob = $_POST["dob"];
+    $branch = $_POST["branch"];
+    $syear = $_POST["syear"];
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $cPassword = $_POST["cPassword"];
+    if (($password == $cPassword)){
+       $sql = "INSERT INTO `users` (`name`, `mobileNo`, `dob`, `branch`, `study_year`, `username`, `password`, `create_time`) VALUES ('$name', '$mobno', '$dob', '$branch', '$syear', '$username', '$password', current_timestamp())";  
+        $result = mysqli_query($conn, $sql);
+        if ($result){
+             $showAlert = true;
+        }
+    }
+}
+?>
+
+
 <!doctype html>
 <html lang="en">
 
@@ -11,7 +34,16 @@
 
 <body>
     <?php require 'comp/_nav.php' ?>
-    <div class="container">
+    <?php
+    if ($showAlert){
+    echo'<div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Success!</strong> Your account is created. You can Login now.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>';
+    }
+    ?>
+    
+    <div class="container my-4">
         <h1 class="text-center my-1">Sign Up Here</h1>
         <form class="row" action="signup.php" method="post">
             <div class="col-md-6">
