@@ -12,7 +12,7 @@ echo'<nav class="navbar navbar-expand-lg bg-body-tertiary">
                     <a class="nav-link active" aria-current="page" href="welcome.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link active" href="comp/_about.php">About</a>
                 </li>
             </ul>
             <form class="d-flex" role="search">
@@ -23,16 +23,15 @@ echo'<nav class="navbar navbar-expand-lg bg-body-tertiary">
 
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
               echo'<form class="d-flex mx-2">
-                      <div class="dropdown-center">
-                      <button class="btn btn-secondary dropdown-toggle" href="logout.php" role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu</button>
-                    
-                      <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="profile.php">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                      </ul>
-                    </div>
-            </form>';
+                      <div class="btn-group dropstart">
+                        <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Options
+                        </button>
+                        <ul class="dropdown-menu">    
+                          <li><a class="dropdown-item" href="profile.php">Profile</a></li>
+                          <li><a class="dropdown-item" href="logout.php">Log Out</a></li></ul>
+                      </div>
+                   </form>';
             }
             else {
               echo'<a class="btn btn-success mx-1" href="login.php" type="submit">Login</a>

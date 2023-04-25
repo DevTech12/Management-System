@@ -1,6 +1,8 @@
 <?php
 $showAlert = false;
 $showError = false;
+$exist = false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
     include 'comp/_dbconnect.php';
     $name = $_POST["uname"];
@@ -11,7 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $username = $_POST["username"];
     $password = $_POST["password"];
     $cPassword = $_POST["cPassword"];
-    $exist = false;
 
     $existSql = "SELECT * FROM `users` WHERE `username` = '$username'";
     $result = mysqli_query($conn, $existSql);
@@ -28,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $result = mysqli_query($conn, $sql);
                 if ($result){
                     $showAlert = true;
+                    header('location: login.php');
                 }
             }
             else {
