@@ -1,5 +1,6 @@
 <?php
 $showAlert = false;
+$showError = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
     include 'comp/_dbconnect.php';
     $name = $_POST["uname"];
@@ -10,13 +11,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $username = $_POST["username"];
     $password = $_POST["password"];
     $cPassword = $_POST["cPassword"];
-    if (($password == $cPassword)){
-       $sql = "INSERT INTO `users` (`name`, `mobileNo`, `dob`, `branch`, `study_year`, `username`, `password`, `create_time`) VALUES ('$name', '$mobno', '$dob', '$branch', '$syear', '$username', '$password', current_timestamp())";  
-        $result = mysqli_query($conn, $sql);
-        if ($result){
-             $showAlert = true;
+    $exist = false;
+
+    $existSql = "SELECT * FROM `users` WHERE `username` = '$username'";
+    $result = mysqli_query($conn, $existSql);
+    $existRow = mysqli_num_rows($result);
+        if ($existRow > 0){
+            // $exists = true;
+            $exist = true;
         }
-    }
+        else{
+            // $exists = false;
+            if ($password == $cPassword){
+                $hash = password_hash($password, PASSWORD_DEFAULT);
+                $sql = "INSERT INTO `users` (`name`, `mobileNo`, `dob`, `branch`, `study_year`, `username`, `password`, `create_time`) VALUES ('$name', '$mobno', '$dob', '$branch', '$syear', '$username', '$hash', current_timestamp())";  
+                $result = mysqli_query($conn, $sql);
+                if ($result){
+                    $showAlert = true;
+                }
+            }
+            else {
+                $showError = true;
+            }
+  }
 }
 ?>
 
@@ -41,8 +58,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>';
     }
+    if ($showError){
+        echo'<div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Oops !</strong> You entered wrong password. Please check your password.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>';
+    }
+
+    if ($exist){
+        echo'<div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>Warning !</strong> You are already a student.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+    }
     ?>
-    
+
     <div class="container my-4">
         <h1 class="text-center my-1">Sign Up Here</h1>
         <form class="row" action="signup.php" method="post">
@@ -107,7 +137,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 <div id="emailHelp" class="form-text">Please enter same password</div>
             </div>
             <div class="col-12">
-                <button class="btn btn-primary" type="submit">Submit form</button>
+                <button class="btn btn-primary" type="submit">Sign Up</button>
             </div>
         </form>
 
